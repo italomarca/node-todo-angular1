@@ -1,0 +1,30 @@
+<div ng-controller="loginController">
+    <header>
+        <div class="jumbotron text-center">
+            <h1>Login</h1>
+        </div>
+    </header>
+    <div id="login-form" class="row">
+        <div class="col-sm-12 col-sm-offset-2 text-center">
+            <br>
+            <form>
+                <div class="form-group">
+                    <input type="text" class="form-control input-lg text-center" placeholder="Username" ng-model="formLoginData.username">
+                    <br>
+                    <input type="password" class="form-control input-lg text-center" placeholder="Password" ng-model="formLoginData.password">
+                </div>
+                
+                <div ng-show="errorMessage" class="alert alert-danger" role="alert">
+                    <strong>Error!</strong> {{errorMessage}}
+                </div>
+
+                <div ng-show="successMessage" class="alert alert-success" role="alert">
+                    <strong>V</strong> {{successMessage}}
+                </div>
+    
+                <button type="submit" class="btn btn-success btn-lg" ng-click="login(formLoginData)">Login</button>
+                <button type="submit" class="btn btn-primary btn-lg" ng-click="register(formLoginData)">Register</button>
+            </form>
+        </div>
+    </div>
+</div>
