@@ -2,7 +2,7 @@
 
 
 
-### Setting up the enviroment
+### Setting up the environment
 
 **1)** Create database
 
