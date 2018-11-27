@@ -5,13 +5,11 @@ var mongoose = require('mongoose'); // mongoose for mongodb
 var morgan = require('morgan'); // log requests to the console (express4)
 var bodyParser = require('body-parser'); // pull information from HTML POST (express4)
 var methodOverride = require('method-override'); // simulate DELETE and PUT (express4)
+var path = require('path');
 
 var jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
-var fs = require('fs');
 
 // configuration ===============================================================
-const RSA_PRIVATE_KEY = fs.readFileSync('./demos/private.key');
-
 app.use(express.static('./public')); // set the static files location /public/img will be /img for users
 app.use(morgan('dev')); // log every request to the console
 app.use(methodOverride());
@@ -19,46 +17,17 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ 'extended': 'true' })); // parse application/x-www-form-urlencoded
 app.use(bodyParser.json({ type: 'application/vnd.api+json' })); // parse application/vnd.api+json as json
 
-mongoose.connect('mongodb://localhost/TodosDB', (err) => {
+mongoose.connect('mongodb://localhost/TodosDB', { useNewUrlParser: true }, (err) => {
   if (err) {
     console.log('error connecting to db', err);
   }
 }); // connect to mongoDB database
 
+// common ======================================================================
+var { validateReq, RSA_PRIVATE_KEY } = require('./common');
+
 // models ======================================================================
-var Schema = mongoose.Schema;
-
-var TodoSchema = Schema({
-  text: String
-});
-
-var TodosSchema = Schema({
-  username: String,
-  password: String,
-  todos: [{ type: TodoSchema, default: () => ({}) }]
-});
-
-var Todos = mongoose.model('Todos', TodosSchema);
-
-// helpers =====================================================================
-async function validateReq (req, key) {
-  try {
-    let token = req.headers['x-access-token'];
-
-    if (!token) {
-      return {
-        err: { status: 400, auth: false, message: 'No token provided.' },
-        decoded: null
-      };
-    };
-
-    let decoded = await jwt.verify(token, key);
-
-    return decoded;
-  } catch (e) {
-    throw new Error(401, e);
-  };
-}
+var { Todos } = require('./models/Todos');
 
 // =============================================================================
 // routes ======================================================================
@@ -229,7 +198,7 @@ app.route('/register')
   });
 
 app.get('*', (req, res) => {
-  res.sendfile('./public/index.html'); // load the single view file (angular will handle the page changes on the front-end)
+  res.sendfile(path.resolve(__dirname, '../public/index.html')); // load the single view file (angular will handle the page changes on the front-end)
 });
 
 // listen (start app with node server.js) ======================================
