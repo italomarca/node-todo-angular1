@@ -26,7 +26,7 @@ mongoose.connect('mongodb://localhost/TodosDB', (err) => {
 }); // connect to mongoDB database
 
 // models ======================================================================
-var Schema = mongoose.Schema;
+var Schema = {};
 
 var TodoSchema = Schema({
   text: String
