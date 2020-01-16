@@ -36,7 +36,7 @@ var TodosSchema = Schema({
   username: String,
   password: String,
   todos: [{ type: TodoSchema, default: () => ({}) }]
-});
+}); // schema of todos objects
 
 var Todos = mongoose.model('Todos', TodosSchema);
 
